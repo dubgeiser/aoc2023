@@ -42,15 +42,14 @@ func part1() int {
 }
 
 var wdigits [9]string = [9]string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
-var sdigits [9]string = [9]string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
 type Solution2 struct {
 	value int
 }
 
-func getFirstIndex(i int, line string) int {
-	wpos := strings.Index(line, wdigits[i])
-	dpos := strings.Index(line, sdigits[i])
+func Index(i int, line string, searcher func(haystack, needle string) int, comparator func(int, int) int) int {
+	wpos := searcher(line, wdigits[i])
+	dpos := searcher(line, fmt.Sprint(i+1))
 	if wpos == -1 && dpos == -1 {
 		return -1
 	}
@@ -60,47 +59,32 @@ func getFirstIndex(i int, line string) int {
 	if dpos == -1 {
 		return wpos
 	}
-	return min(wpos, dpos)
+	return comparator(wpos, dpos)
 }
 
-func getLastIndex(i int, line string) int {
-	wpos := strings.LastIndex(line, wdigits[i])
-	dpos := strings.LastIndex(line, sdigits[i])
-	if wpos == -1 && dpos == -1 {
-		return -1
-	}
-	if wpos == -1 {
-		return dpos
-	}
-	if dpos == -1 {
-		return wpos
-	}
-	return max(wpos, dpos)
+func Min(a, b int) int {
+	return min(a, b)
+}
+
+func Max(a, b int) int {
+	return max(a, b)
 }
 
 func (lp *Solution2) ProcessLine(line string) {
-	pLo := -1
+	pLo := len(line)
 	iLo := 0
 	pHi := -1
 	iHi := 0
 	for i := 0; i < 9; i++ {
-		lo := getFirstIndex(i, line)
+		lo := Index(i, line, strings.Index, Min)
 		if lo == -1 {
 			continue
-		}
-		if pLo == -1 {
-			pLo = lo
-			iLo = i
 		}
 		if lo < pLo {
 			pLo = lo
 			iLo = i
 		}
-		hi := getLastIndex(i, line)
-		if pHi == -1 {
-			pHi = hi
-			iHi = i
-		}
+		hi := Index(i, line, strings.LastIndex, Max)
 		if hi > pHi {
 			pHi = hi
 			iHi = i
