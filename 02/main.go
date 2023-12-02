@@ -76,6 +76,33 @@ func part1() int {
 	return s.value
 }
 
+func part2() int {
+	s := &Solution2{}
+	file.ReadLines("./input", s)
+	return s.answer
+}
+
+type Solution2 struct {
+	answer int
+}
+
+func (lp *Solution2) ProcessLine(line string) {
+	_, grabs := parseGame(line)
+	mvg := findMinimumViableGrab(grabs)
+	lp.answer += mvg[0] * mvg[1] * mvg[2]
+}
+
+func findMinimumViableGrab(grabs [][3]int) [3]int {
+	mvg := [3]int{0}
+	for _, g := range grabs {
+		for i, cube := range g {
+			mvg[i] = max(mvg[i], cube)
+		}
+	}
+	return mvg
+}
+
 func main() {
 	fmt.Println(part1())
+	fmt.Println(part2())
 }
