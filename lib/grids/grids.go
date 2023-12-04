@@ -6,6 +6,14 @@ import (
 	"strings"
 )
 
+var allDirections = [8]Pos{
+	{0, -1}, {0, 1},
+	{1, 0}, {1, -1}, {1, 1},
+	{-1, 0}, {-1, -1}, {-1, 1},
+}
+
+var xyDirections = [4][2]int{}
+
 type Pos struct {
 	Row int
 	Col int
@@ -15,7 +23,6 @@ func NewPosition(row, col int) Pos {
 	pos := Pos{Row: row, Col: col}
 	return pos
 }
-
 
 type Grid[T any] struct {
 	items  [][]T
@@ -58,6 +65,18 @@ func (g *Grid[T]) InBounds(row, col int) bool {
 
 func (g *Grid[T]) InBoundsPosition(pos Pos) bool {
 	return g.InBounds(pos.Row, pos.Col)
+}
+
+func (g *Grid[T]) AdjacentPositions(row, col int) []Pos {
+	a := []Pos{}
+	var check Pos
+	for _, p := range allDirections {
+		check = Pos{row + p.Row, col + p.Col}
+		if g.InBoundsPosition(check) {
+			a = append(a, check)
+		}
+	}
+	return a
 }
 
 type stringGridBuilder struct {

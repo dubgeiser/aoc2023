@@ -7,19 +7,9 @@ import (
 	"strconv"
 )
 
-var directions = [8][2]int{
-	{0, -1}, {0, 1},
-	{1, 0}, {1, -1}, {1, 1},
-	{-1, 0}, {-1, -1}, {-1, 1},
-}
-
 func CheckAdjancency(grid *grids.Grid[string], row, col int) bool {
-	for _, dir := range directions {
-		checkPos := grids.NewPosition(row+dir[0], col+dir[1])
-		if !grid.InBoundsPosition(checkPos) {
-			continue
-		}
-		c := grid.Get(checkPos)
+	for _, p := range grid.AdjacentPositions(row, col) {
+		c := grid.Get(p)
 		if _, err := strconv.Atoi(c); err != nil {
 			if c != "." {
 				return true
@@ -31,13 +21,9 @@ func CheckAdjancency(grid *grids.Grid[string], row, col int) bool {
 
 func FindAdjacentGearPositions(grid *grids.Grid[string], row, col int) *collections.Set[grids.Pos] {
 	adjacentGears := collections.NewSet[grids.Pos]()
-	for _, dir := range directions {
-		checkPos := grids.NewPosition(row+dir[0], col+dir[1])
-		if !grid.InBoundsPosition(checkPos) {
-			continue
-		}
-		if grid.Get(checkPos) == "*" {
-			adjacentGears.Add(checkPos)
+	for _, p := range grid.AdjacentPositions(row, col) {
+		if grid.Get(p) == "*" {
+			adjacentGears.Add(p)
 		}
 	}
 	return adjacentGears
