@@ -2,26 +2,22 @@ package grids
 
 import (
 	"aoc2023/lib/file"
-	"fmt"
 	"strings"
 )
 
-var allDirections = [8]Pos{
+var allDirections = [8]Position{
 	{0, -1}, {0, 1},
 	{1, 0}, {1, -1}, {1, 1},
 	{-1, 0}, {-1, -1}, {-1, 1},
 }
 
-var xyDirections = [4][2]int{}
-
-type Pos struct {
+type Position struct {
 	Row int
 	Col int
 }
 
-func NewPosition(row, col int) Pos {
-	pos := Pos{Row: row, Col: col}
-	return pos
+func NewPosition(row, col int) Position {
+	return Position{Row: row, Col: col}
 }
 
 type Grid[T any] struct {
@@ -42,16 +38,12 @@ func NewGrid[T any](height int, width int, v T) *Grid[T] {
 	return grid
 }
 
-func (g *Grid[T]) String() string {
-	return fmt.Sprint(g.items)
-}
-
 func (g *Grid[T]) GetAt(row int, col int) T {
 	return g.items[row][col]
 }
 
-func (g *Grid[T]) Get(pos Pos) T {
-	return g.GetAt(pos.Row, pos.Col)
+func (g *Grid[T]) Get(p Position) T {
+	return g.GetAt(p.Row, p.Col)
 }
 
 func (g *Grid[T]) Set(row int, col int, v T) *Grid[T] {
@@ -63,15 +55,15 @@ func (g *Grid[T]) InBounds(row, col int) bool {
 	return row > 0 && col > 0 && row < g.Height && col < g.Width
 }
 
-func (g *Grid[T]) InBoundsPosition(pos Pos) bool {
-	return g.InBounds(pos.Row, pos.Col)
+func (g *Grid[T]) InBoundsPosition(p Position) bool {
+	return g.InBounds(p.Row, p.Col)
 }
 
-func (g *Grid[T]) AdjacentPositions(row, col int) []Pos {
-	a := []Pos{}
-	var check Pos
+func (g *Grid[T]) AdjacentPositions(row, col int) []Position {
+	a := []Position{}
+	var check Position
 	for _, p := range allDirections {
-		check = Pos{row + p.Row, col + p.Col}
+		check = Position{row + p.Row, col + p.Col}
 		if g.InBoundsPosition(check) {
 			a = append(a, check)
 		}

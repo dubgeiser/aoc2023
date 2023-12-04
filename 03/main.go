@@ -19,8 +19,8 @@ func CheckAdjancency(grid *grids.Grid[string], row, col int) bool {
 	return false
 }
 
-func FindAdjacentGearPositions(grid *grids.Grid[string], row, col int) *collections.Set[grids.Pos] {
-	adjacentGears := collections.NewSet[grids.Pos]()
+func FindAdjacentGearPositions(grid *grids.Grid[string], row, col int) *collections.Set[grids.Position] {
+	adjacentGears := collections.NewSet[grids.Position]()
 	for _, p := range grid.AdjacentPositions(row, col) {
 		if grid.Get(p) == "*" {
 			adjacentGears.Add(p)
@@ -59,8 +59,8 @@ func part1() {
 func part2() {
 	answer := 0
 	g := grids.GridFromFile("./input")
-	gears2AdjacentNumbers := make(map[grids.Pos][]int)
-	adjacentGears := collections.NewSet[grids.Pos]()
+	gears2AdjacentNumbers := make(map[grids.Position][]int)
+	adjacentGears := collections.NewSet[grids.Position]()
 	for row := 0; row < g.Height; row++ {
 		currN := 0
 		for col := 0; col < g.Width; col++ {
