@@ -55,7 +55,7 @@ func parseGame(line string) (int, [][3]int) {
 	return id, grabs
 }
 
-func (lp *Solution1) ProcessLine(line string) {
+func (lp *Solution1) ProcessLine(lineIndex int, line string) {
 	id, grabs := parseGame(line)
 	isPossible := true
 	for _, grab := range grabs {
@@ -86,7 +86,7 @@ type Solution2 struct {
 	answer int
 }
 
-func (lp *Solution2) ProcessLine(line string) {
+func (lp *Solution2) ProcessLine(lineIndex int, line string) {
 	_, grabs := parseGame(line)
 	mvg := findMinimumViableGrab(grabs)
 	lp.answer += mvg[0] * mvg[1] * mvg[2]

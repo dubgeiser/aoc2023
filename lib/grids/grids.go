@@ -84,7 +84,7 @@ type stringGridBuilder struct {
 	width int
 }
 
-func (b *stringGridBuilder) ProcessLine(line string) {
+func (b *stringGridBuilder) ProcessLine(i int, line string) {
 	b.width = len(line)
 	b.grid = append(b.grid, strings.Split(line, ""))
 }

@@ -10,7 +10,7 @@ type Solution1 struct {
 	value int
 }
 
-func (s *Solution1) ProcessLine(line string) {
+func (s *Solution1) ProcessLine(lineIndex int, line string) {
 	digits := []int{}
 	for _, c := range line {
 		if c > '0' && c <= '9' {
@@ -24,7 +24,7 @@ type Solution2 struct {
 	value int
 }
 
-func (s *Solution2) ProcessLine(line string) {
+func (s *Solution2) ProcessLine(lineIndex int, line string) {
 	digits := []int{}
 	for i, c := range line {
 		if c > '0' && c <= '9' {

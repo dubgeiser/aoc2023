@@ -11,7 +11,7 @@ type Solution1 struct {
 	value int
 }
 
-func (lp *Solution1) ProcessLine(line string) {
+func (lp *Solution1) ProcessLine(lineIndex int, line string) {
 	snumber := ""
 	for i := 0; i < len(line); i++ {
 		if n, err := strconv.Atoi(string(line[i])); err == nil {
@@ -70,7 +70,7 @@ func Max(a, b int) int {
 	return max(a, b)
 }
 
-func (lp *Solution2) ProcessLine(line string) {
+func (lp *Solution2) ProcessLine(lineIndex int, line string) {
 	pLo := len(line)
 	iLo := 0
 	pHi := -1
