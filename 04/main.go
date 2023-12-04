@@ -52,6 +52,55 @@ func part1() {
 	fmt.Println(s.answer)
 }
 
+type Solution2 struct {
+	cards []*Card
+}
+
+type Card struct {
+	winning   []int
+	played    []int
+	iProduced []int
+	numCopies int
+}
+
+func (s *Solution2) ProcessLine(line string) {
+	winning, played := parseNumbers(line)
+	s.cards = append(s.cards, &Card{winning, played, []int{}, 1})
+}
+
+func part2() {
+	s := &Solution2{}
+	file.ReadLines("./input", s)
+	for i, c := range s.cards {
+		numWins := 0
+		for _, np := range c.played {
+			if slices.Contains(c.winning, np) {
+				numWins++
+			}
+		}
+		for j := i + 1; j < i+1+numWins; j++ {
+			c.iProduced = append(c.iProduced, j)
+		}
+	}
+
+	// We can be sure that the last card does not produce any further cards.
+	// I'm still wondering if "copy" is the right name, because we count the
+	// _real_, _original_ card also... which isn't a copy, right?
+	// Damn you, Jelle!
+	for i := len(s.cards) - 1; i > -1; i-- {
+		for _, j := range s.cards[i].iProduced {
+			s.cards[i].numCopies += s.cards[j].numCopies
+		}
+	}
+
+	answer := 0
+	for _, c := range s.cards {
+		answer += c.numCopies
+	}
+	fmt.Println(answer)
+}
+
 func main() {
 	part1()
+	part2()
 }
