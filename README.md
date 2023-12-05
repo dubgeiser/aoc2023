@@ -9,3 +9,11 @@ Every day will be a directory, with 1 `main.go` file that has 2 functions, `part
 I cannot explain where the inspiration comes from.
 
 Puzzles should normally be found on https://adventofcode.com/2023/
+
+
+## TODO / REVISIT
+
+### Day 5, part 2
+Took the easy route and let the program run for a couple of minutes... Answer was found < 3', I'll take it for now :-D.
+
+Think it should be rewritten with calculating the min. location for ranges or something (haven't yet thought about it)

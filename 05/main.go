@@ -106,6 +106,28 @@ func part1() {
 	fmt.Println(minLocation)
 }
 
+func part2() {
+	s := &Solution{}
+	file.ReadLines("./input", s)
+	s.maps = append(s.maps, s.currMaps)
+	minLocation := math.MaxInt
+	fmt.Println()
+	var res int
+	for i := 0; i < len(s.seeds); i += 2 {
+		seedStart := s.seeds[i]
+		seedLength := s.seeds[i] + s.seeds[i+1]
+		for seed := seedStart; seed < seedLength; seed++ {
+			res = seed
+			for _, c := range s.maps {
+				res = c.FindDestination(res)
+			}
+			minLocation = min(minLocation, res)
+		}
+	}
+	fmt.Println(minLocation)
+}
+
 func main() {
 	part1()
+	part2()
 }
