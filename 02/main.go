@@ -19,30 +19,27 @@ func isValidGrab(grab [3]int) bool {
 
 var color2index = map[string]int{"red": 0, "green": 1, "blue": 2}
 
-func parseGrab(sGrab string) [3]int {
-	grab := [3]int{0}
+func parseCubeCount(sGrab string) (int, int) {
 	cc := strings.Split(sGrab, " ")
 	count, _ := strconv.Atoi(cc[0])
 	color := cc[1]
-	grab[color2index[color]] = count
-	return grab
+	return color2index[color], count
 }
 
-func parseGrabs(sGrabs []string) [][3]int {
-	var grabs [][3]int
+func parseGrab(sGrabs []string) [3]int {
+	var grab [3]int
 	for _, g := range sGrabs {
-		grabs = append(grabs, parseGrab(g))
+		i, count := parseCubeCount(g)
+		grab[i] = count
 	}
-	return grabs
+	return grab
 }
 
 func parseSets(setInput string) [][3]int {
 	var grabs [][3]int
 	sets := strings.Split(setInput, "; ")
 	for _, s := range sets {
-		for _, g := range parseGrabs(strings.Split(s, ", ")) {
-			grabs = append(grabs, g)
-		}
+		grabs = append(grabs, parseGrab(strings.Split(s, ", ")))
 	}
 	return grabs
 }
