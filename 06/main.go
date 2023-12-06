@@ -51,6 +51,36 @@ func part1() {
 	fmt.Println(answer)
 }
 
+type Solution2 struct {
+	time     int
+	distance int
+}
+
+func (s *Solution2) ProcessLine(i int, line string) {
+	if n, err := strconv.Atoi(strings.ReplaceAll(strings.Split(line, ":")[1], " ", "")); err == nil {
+		if i == 0 {
+			s.time = n
+		} else {
+			s.distance = n
+		}
+	}
+}
+
+func part2() {
+	s := &Solution2{}
+	file.ReadLines("./input", s)
+	answer := 0
+	record := s.distance
+	raceTime := s.time
+	for startSpeed := 1; startSpeed < raceTime; startSpeed++ {
+		if startSpeed*(raceTime-startSpeed) > record {
+			answer++
+		}
+	}
+	fmt.Println(answer)
+}
+
 func main() {
 	part1()
+	part2()
 }
