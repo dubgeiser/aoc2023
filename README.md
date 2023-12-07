@@ -17,3 +17,29 @@ Puzzles should normally be found on https://adventofcode.com/2023/
 Took the easy route and let the program run for a couple of minutes... Answer was found < 3', I'll take it for now :-D.
 
 Think it should be rewritten with calculating the min. location for ranges or something (haven't yet thought about it)
+
+
+## Notes
+
+### Day 6
+While parsing either the times or distances depending on `i` being 0 or 1, I took the simple way with a conditional.
+times and distances could also be referenced so that `i` can be used as an index to assign to either times or distances.
+Not convinced that this is necessary here, but it's an idiom worth keeping in mind, I feel.
+```Go
+for _, sn := range sNrs {
+    if n, err := strconv.Atoi(sn); err == nil {
+        if i == 0 {
+            s.times = append(s.times, n)
+        } else {
+            s.distances = append(s.distances, n)
+        }
+    }
+}
+
+// VERSUS
+
+targets := [2]*[]int{&s.times, &s.distances}
+for _, sn := range sNrs {
+    if n, err := strconv.Atoi(sn); err == nil {
+        *targets[i] = append(*targets[i], n)
+```
