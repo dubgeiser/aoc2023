@@ -19,6 +19,12 @@ Took the easy route and let the program run for a couple of minutes... Answer wa
 Think it should be rewritten with calculating the min. location for ranges or something (haven't yet thought about it)
 
 
+### Day 7
+Very tired, keeping it "simple"... at least for that little part of my brain that is still somewhat functioning.
+I feel that there's got to be some simple nifty bitwise operator stuff in there to solve this though.
+After all; card games have been programmed in home computers with 2KB memory and all...
+
+
 ## Notes
 
 ### Day 6
