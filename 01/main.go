@@ -1,3 +1,8 @@
+//
+// This solution is for history purposes.
+// In `01-alt/` is a _far_ more preferable one.
+//
+
 package main
 
 import (
