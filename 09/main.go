@@ -54,7 +54,7 @@ func part1() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Read ", lineCount, " lines")
+	fmt.Println("Read", lineCount, "lines")
 	fmt.Println(s.answer)
 }
 

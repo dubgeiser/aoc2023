@@ -32,7 +32,7 @@ func part1() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Read ", lineCount, " lines")
+	fmt.Println("Read", lineCount, "lines")
 
 	answer := 0
 	for ti, raceTime := range s.times {
