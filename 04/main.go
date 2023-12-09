@@ -9,8 +9,20 @@ import (
 	"strings"
 )
 
-type Solution1 struct {
-	answer int
+type Solution struct {
+	cards   []*Card
+	answer1 int
+	answer2 int
+}
+
+func (s *Solution) ProcessLine(i int, line string) {
+	s.answer1 += int(math.Pow(2, float64(WinCount(line)-1)))
+	winCount := WinCount(line)
+	iProduced := []int{}
+	for j := i + 1; j < i+1+winCount; j++ {
+		iProduced = append(iProduced, j)
+	}
+	s.cards = append(s.cards, &Card{iProduced, 1})
 }
 
 func WinCount(line string) int {
@@ -33,53 +45,29 @@ func WinCount(line string) int {
 	return len(winning.Intersection(played).Items())
 }
 
-func (s *Solution1) ProcessLine(lineIndex int, line string) {
-	s.answer += int(math.Pow(2, float64(WinCount(line)-1)))
-}
-
-func part1() {
-	s := &Solution1{}
-	file.ReadLines("./input", s)
-	fmt.Println(s.answer)
-}
-
-type Solution2 struct {
-	cards []*Card
-}
-
 type Card struct {
 	iProduced []int
 	numCopies int
 }
 
-func (s *Solution2) ProcessLine(i int, line string) {
-	winCount := WinCount(line)
-	iProduced := []int{}
-	for j := i + 1; j < i+1+winCount; j++ {
-		iProduced = append(iProduced, j)
+func main() {
+	s := &Solution{}
+	lineCount, err := file.ReadLines("./input", s)
+	if err != nil {
+		panic(err)
 	}
-	s.cards = append(s.cards, &Card{iProduced, 1})
-}
-
-func part2() {
-	s := &Solution2{}
-	file.ReadLines("./input", s)
+	fmt.Println("Read", lineCount, "lines")
+	fmt.Println(s.answer1)
 
 	// We can be sure that the last card does not produce any further cards.
 	// I'm still wondering if "copy" is the right name, because we count the
 	// _real_, _original_ card also... which isn't a copy, right?
 	// Damn you, Jelle!
-	answer := 0
 	for i := len(s.cards) - 1; i > -1; i-- {
 		for _, j := range s.cards[i].iProduced {
 			s.cards[i].numCopies += s.cards[j].numCopies
 		}
-		answer += s.cards[i].numCopies
+		s.answer2 += s.cards[i].numCopies
 	}
-	fmt.Println(answer)
-}
-
-func main() {
-	part1()
-	part2()
+	fmt.Println(s.answer2)
 }

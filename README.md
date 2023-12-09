@@ -16,6 +16,9 @@ Puzzles should normally be found on https://adventofcode.com/2023/
 ### Day 3
 Solution looks too complicated, can probably done a lot more concise
 
+### Day 4, part 2
+Going by the need to loop over the cards first a second time after building the `Card` slice, suggests that there's probably an easier way to go about this.
+
 ### Day 5, part 2
 Took the easy route and let the program run for a couple of minutes... Answer was found < 3', I'll take it for now :-D.
 
