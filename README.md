@@ -13,9 +13,6 @@ Puzzles should normally be found on https://adventofcode.com/2023/
 
 ## TODO / REVISIT
 
-### Day 1
-Parsing seems convoluted
-
 ### Day 3
 Solution looks too complicated, can probably done a lot more concise
 

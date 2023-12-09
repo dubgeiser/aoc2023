@@ -2,43 +2,16 @@ package main
 
 import (
 	"aoc2023/lib/file"
+	"bytes"
 	"fmt"
+	"regexp"
 	"strings"
 )
 
-type Solution1 struct {
-	value int
+type Solution struct {
+	answer1 int
+	answer2 int
 }
-
-func (s *Solution1) ProcessLine(lineIndex int, line string) {
-	digits := []int{}
-	for _, c := range line {
-		if c > '0' && c <= '9' {
-			digits = append(digits, int(c-'0'))
-		}
-	}
-	s.value += 10*digits[0] + digits[len(digits)-1]
-}
-
-type Solution2 struct {
-	value int
-}
-
-func (s *Solution2) ProcessLine(lineIndex int, line string) {
-	digits := []int{}
-	for i, c := range line {
-		if c > '0' && c <= '9' {
-			digits = append(digits, int(c-'0'))
-		} else {
-			if d, ok := WrittenDigit(c, line[i:]); ok {
-				digits = append(digits, d)
-			}
-		}
-	}
-	s.value += 10*digits[0] + digits[len(digits)-1]
-}
-
-var writtenDigits = [9]string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
 
 func WrittenDigit(c rune, line string) (int, bool) {
 	for i, wd := range writtenDigits {
@@ -49,19 +22,27 @@ func WrittenDigit(c rune, line string) (int, bool) {
 	return 0, false
 }
 
-func part1() int {
-	s := &Solution1{}
-	file.ReadLines("../01/input", s)
-	return s.value
-}
+var re = regexp.MustCompile(`[1-9]`)
+var writtenDigits = [9]string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
 
-func part2() int {
-	s := &Solution2{}
-	file.ReadLines("../01/input", s)
-	return s.value
+func (s *Solution) ProcessLine(i int, line string) {
+	digits := re.FindAll([]byte(line), -1)
+	s.answer1 += 10*int(bytes.Runes(digits[0])[0]-'0') + int(bytes.Runes(digits[len(digits)-1])[0]-'0')
+
+	mixDigits := []int{}
+	for i, c := range line {
+		if c > '0' && c <= '9' {
+			mixDigits = append(mixDigits, int(c-'0'))
+		} else if d, ok := WrittenDigit(c, line[i:]); ok {
+			mixDigits = append(mixDigits, d)
+		}
+	}
+	s.answer2 += 10*mixDigits[0] + mixDigits[len(mixDigits)-1]
 }
 
 func main() {
-	fmt.Println(part1())
-	fmt.Println(part2())
+	s := &Solution{}
+	file.ReadLines("../01/input", s)
+	fmt.Println(s.answer1)
+	fmt.Println(s.answer2)
 }
