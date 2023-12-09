@@ -26,6 +26,9 @@ Very tired, keeping it "simple"... at least for that little part of my brain tha
 I feel that there's got to be some simple nifty bitwise operator stuff in there to solve this though.
 After all; card games have been programmed in home computers with 2KB memory and all...
 
+### Day 9
+I assume there a bunch of (ML) algo's for predicting the next element in a sequence
+
 
 ## Notes
 

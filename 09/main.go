@@ -7,23 +7,30 @@ import (
 	"strings"
 )
 
-type Solution1 struct {
-	answer int
+const (
+	previous = iota
+	next
+)
+
+type Solution struct {
+	answer1 int
+	answer2 int
 }
 
-func (s *Solution1) ProcessLine(i int, line string) {
+func (s *Solution) ProcessLine(i int, line string) {
 	nums := []int{}
 	for _, sNum := range strings.Split(line, " ") {
 		if num, err := strconv.Atoi(sNum); err == nil {
 			nums = append(nums, num)
 		}
 	}
-	s.answer += nums[len(nums) - 1] + FindNext(nums)
+	s.answer1 += nums[len(nums)-1] + Find(nums, next)
+	s.answer2 += nums[0] - Find(nums, previous)
 }
 
-func AllZeroes(nums []int) bool {
+func AllSame(nums []int) bool {
 	for _, n := range nums {
-		if n != 0 {
+		if n != nums[0] {
 			return false
 		}
 	}
@@ -40,53 +47,24 @@ func Distances(n []int) []int {
 	return d
 }
 
-func FindNext(n []int) int {
+func Find(n []int, where int) int {
 	d := Distances(n)
-	if AllZeroes(d) {
-		return 0
+	if AllSame(d) {
+		return d[0]
 	}
-	return d[len(d)-1] + FindNext(d)
+	if where == next {
+		return d[len(d)-1] + Find(d, next)
+	}
+	return d[0] - Find(d, previous)
 }
 
-func part1() {
-	s := &Solution1{}
+func main() {
+	s := &Solution{}
 	lineCount, err := file.ReadLines("./input", s)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Read", lineCount, "lines")
-	fmt.Println(s.answer)
-}
-
-type Solution2 struct {
-	answer int
-}
-
-func (s *Solution2) ProcessLine(i int, line string) {
-	nums := []int{}
-	for _, sNum := range strings.Split(line, " ") {
-		if num, err := strconv.Atoi(sNum); err == nil {
-			nums = append(nums, num)
-		}
-	}
-	s.answer += nums[0] - FindPrevious(nums)
-}
-
-func FindPrevious(n []int) int {
-	d := Distances(n)
-	if AllZeroes(d) {
-		return 0
-	}
-	return d[0] - FindPrevious(d)
-}
-
-func part2() {
-	s := &Solution2{}
-	file.ReadLines("./input", s)
-	fmt.Println(s.answer)
-}
-
-func main() {
-	part1()
-	part2()
+	fmt.Println(s.answer1)
+	fmt.Println(s.answer2)
 }
