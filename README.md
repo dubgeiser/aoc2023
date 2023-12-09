@@ -13,11 +13,16 @@ Puzzles should normally be found on https://adventofcode.com/2023/
 
 ## TODO / REVISIT
 
+### Day 1
+Parsing seems convoluted
+
+### Day 3
+Solution looks too complicated, can probably done a lot more concise
+
 ### Day 5, part 2
 Took the easy route and let the program run for a couple of minutes... Answer was found < 3', I'll take it for now :-D.
 
 Think it should be rewritten with calculating the min. location for ranges or something (haven't yet thought about it)
-
 
 ### Day 7
 Very tired, keeping it "simple"... at least for that little part of my brain that is still somewhat functioning.
