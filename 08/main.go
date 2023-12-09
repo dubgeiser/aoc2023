@@ -48,6 +48,74 @@ func part1() {
 	fmt.Println(steps)
 }
 
+type Solution2 struct {
+	lrs    []int
+	M      map[string][2]string
+	starts []string
+}
+
+func (s *Solution2) ProcessLine(i int, line string) {
+	if i == 0 {
+		l := strings.ReplaceAll(strings.ReplaceAll(line, "L", "0"), "R", "1")
+		for _, r := range l {
+			if n, err := strconv.Atoi(string(r)); err == nil {
+				s.lrs = append(s.lrs, n)
+			}
+		}
+		return
+	}
+	if line == "" {
+		return
+	}
+	var n, l, r string
+	fmt.Sscanf(line, "%3s = (%3s, %3s)", &n, &l, &r)
+	s.M[n] = [2]string{l, r}
+	if n[2] == 'A' {
+		s.starts = append(s.starts, n)
+	}
+}
+
+// Euclid (algo book p.912)
+func GCD(a, b int) int {
+	if b == 0 {
+		return a
+	}
+	return GCD(b, a%b)
+}
+
+// The least common multiple (lcm) of a and b is their product divided by their
+// greatest common divisor (gcd)
+// lcm(a, b) = ab/gcd(a,b)).
+func LCM(a, b int) int {
+	return a * b / GCD(a, b)
+}
+
+// Find the number of steps that each start point needs to find its end.
+// Then calculate the least common multiple of those steps.
+// The lcm() determines at which step the end points overlap, ie. the number of
+// steps it takes for all start points to simultaneously reach their end point.
+func part2() {
+	s := &Solution2{M: make(map[string][2]string)}
+	file.ReadLines("./input", s)
+
+	steps := []int{}
+	var lr int
+	for _, start := range s.starts {
+		step := 0
+		for curr := start; curr[2] != 'Z'; step++ {
+			lr = s.lrs[step%len(s.lrs)]
+			curr = s.M[curr][lr]
+		}
+		steps = append(steps, step)
+	}
+	answer := LCM(steps[0], steps[1])
+	for _, step := range steps[2:] {
+		answer = LCM(answer, step)
+	}
+	fmt.Println(answer)
+}
+
 func main() {
 	part1()
+	part2()
 }
