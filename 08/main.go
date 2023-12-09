@@ -14,8 +14,7 @@ type Solution1 struct {
 
 func (s *Solution1) ProcessLine(i int, line string) {
 	if i == 0 {
-		l := strings.ReplaceAll(line, "L", "0")
-		l = strings.ReplaceAll(l, "R", "1")
+		l := strings.ReplaceAll(strings.ReplaceAll(line, "L", "0"), "R", "1")
 		for _, r := range l {
 			if n, err := strconv.Atoi(string(r)); err == nil {
 				s.lrs = append(s.lrs, n)
@@ -23,13 +22,12 @@ func (s *Solution1) ProcessLine(i int, line string) {
 		}
 		return
 	}
-	if line == "" { return }
-	a := strings.Split(line, " = ")
-	key := a[0]
-	lr := strings.Split(a[1], ", ")
-	l := strings.TrimLeft(lr[0], "(")
-	r := strings.TrimRight(lr[1], ")")
-	s.M[key] = [2]string{l, r}
+	if line == "" {
+		return
+	}
+	var n, l, r string
+	fmt.Sscanf(line, "%3s = (%3s, %3s)", &n, &l, &r)
+	s.M[n] = [2]string{l, r}
 }
 
 func part1() {
@@ -42,20 +40,10 @@ func part1() {
 	fmt.Println()
 
 	steps := 0
-	curr := "AAA"
 	var lr int
-	var next string
-	for i := 0; i <= len(s.lrs); i++ {
-		if i == len(s.lrs) {
-			i = 0
-		}
-		lr = s.lrs[i]
-		next = s.M[curr][lr]
-		steps++
-		if next == "ZZZ" {
-			break
-		}
-		curr = next
+	for curr := "AAA"; curr != "ZZZ"; steps++ {
+		lr = s.lrs[steps%len(s.lrs)]
+		curr = s.M[curr][lr]
 	}
 	fmt.Println(steps)
 }
