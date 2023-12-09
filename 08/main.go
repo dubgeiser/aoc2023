@@ -1,6 +1,7 @@
 package main
 
 import (
+	"aoc2023/lib/algo"
 	"aoc2023/lib/file"
 	"fmt"
 	"strconv"
@@ -75,21 +76,6 @@ func (s *Solution2) ProcessLine(i int, line string) {
 	}
 }
 
-// Euclid (algo book p.912)
-func GCD(a, b int) int {
-	if b == 0 {
-		return a
-	}
-	return GCD(b, a%b)
-}
-
-// The least common multiple (lcm) of a and b is their product divided by their
-// greatest common divisor (gcd)
-// lcm(a, b) = ab/gcd(a,b)).
-func LCM(a, b int) int {
-	return a * b / GCD(a, b)
-}
-
 // Find the number of steps that each start point needs to find its end.
 // Then calculate the least common multiple of those steps.
 // The lcm() determines at which step the end points overlap, ie. the number of
@@ -108,11 +94,7 @@ func part2() {
 		}
 		steps = append(steps, step)
 	}
-	answer := LCM(steps[0], steps[1])
-	for _, step := range steps[2:] {
-		answer = LCM(answer, step)
-	}
-	fmt.Println(answer)
+	fmt.Println(algo.LCMSlice(steps))
 }
 
 func main() {
