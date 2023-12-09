@@ -58,6 +58,35 @@ func part1() {
 	fmt.Println(s.answer)
 }
 
+type Solution2 struct {
+	answer int
+}
+
+func (s *Solution2) ProcessLine(i int, line string) {
+	nums := []int{}
+	for _, sNum := range strings.Split(line, " ") {
+		if num, err := strconv.Atoi(sNum); err == nil {
+			nums = append(nums, num)
+		}
+	}
+	s.answer += nums[0] - FindPrevious(nums)
+}
+
+func FindPrevious(n []int) int {
+	d := Distances(n)
+	if AllZeroes(d) {
+		return 0
+	}
+	return d[0] - FindPrevious(d)
+}
+
+func part2() {
+	s := &Solution2{}
+	file.ReadLines("./input", s)
+	fmt.Println(s.answer)
+}
+
 func main() {
 	part1()
+	part2()
 }
