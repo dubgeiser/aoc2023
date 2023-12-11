@@ -10,8 +10,20 @@ func NewSet[T comparable]() *Set[T] {
 	return s
 }
 
+func NewSetFrom[T comparable] (l []T) *Set[T] {
+	s := NewSet[T]()
+	s.AddMany(l)
+	return s
+}
+
 func (s *Set[T]) Add(v T) {
 	s.items[v] = struct{}{}
+}
+
+func (s *Set[T]) AddMany(l []T) {
+	for _, v := range l {
+		s.Add(v)
+	}
 }
 
 func (s *Set[T]) AddSet(s2 *Set[T]) {
@@ -35,6 +47,14 @@ func (s *Set[T]) Clear() {
 func (s *Set[T]) Has(v T) bool {
 	_, ok := s.items[v]
 	return ok
+}
+
+func (s *Set[T]) Export() []T {
+	var export []T
+	for v := range s.items {
+		export = append(export, v)
+	}
+	return export
 }
 
 func (s *Set[T]) Intersection(s2 *Set[T]) *Set[T] {
