@@ -43,16 +43,16 @@ func (s *Solution) FindEmptyCols() {
 	}
 }
 
-func (s *Solution) CalcExpansion(p1, p2 grids.Position) int {
+func (s *Solution) CalcExpansion(p1, p2 grids.Position, factor int) int {
 	exp := 0
 	for _, er := range s.ExpRows {
 		if min(p1.Row, p2.Row) <= er && er <= max(p1.Row, p2.Row) {
-			exp++
+			exp += int(factor - 1)
 		}
 	}
 	for _, ec := range s.ExpCols {
 		if min(p1.Col, p2.Col) <= ec && ec <= max(p1.Col, p2.Col) {
-			exp++
+			exp += int(factor - 1)
 		}
 	}
 	return exp
@@ -79,15 +79,14 @@ func ManhattanDistance(p1, p2 grids.Position) int {
 	return Abs(p1.Row-p2.Row) + Abs(p1.Col-p2.Col)
 }
 
-func (s *Solution) Solve1() any {
-	s.FindEmptyCols()
+func (s *Solution) Solve(factor int) any {
 	answer := 0
 	count := 1
 	for i := 0; i < len(s.Positions)-1; i++ {
-		for j := i+1; j < len(s.Positions); j++ {
+		for j := i + 1; j < len(s.Positions); j++ {
 			p1 := s.Positions[i]
 			p2 := s.Positions[j]
-			d := ManhattanDistance(p1, p2) + s.CalcExpansion(p1, p2)
+			d := ManhattanDistance(p1, p2) + s.CalcExpansion(p1, p2, factor)
 			count++
 			answer += d
 		}
@@ -95,8 +94,13 @@ func (s *Solution) Solve1() any {
 	return answer
 }
 
+func (s *Solution) Solve1() any {
+	s.FindEmptyCols()
+	return s.Solve(2)
+}
+
 func (s *Solution) Solve2() any {
-	return 0
+	return s.Solve(1000000)
 }
 
 func main() {
