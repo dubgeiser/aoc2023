@@ -26,6 +26,17 @@ type Grid[T any] struct {
 	Width  int
 }
 
+// rows <-> cols
+func Transpose[T any](m [][]T) [][]T {
+	t := make([][]T, len(m))
+	for r := 0; r < len(m); r++ {
+		for c := 0; c < len(m[0]); c++ {
+			t[c] = append(t[c], m[r][c])
+		}
+	}
+	return t
+}
+
 func NewGrid[T any](height int, width int, v T) *Grid[T] {
 	grid := &Grid[T]{Width: width, Height: height}
 	grid.items = make([][]T, height)

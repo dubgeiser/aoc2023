@@ -28,7 +28,7 @@ func (s *Solution) ProcessLine(i int, line string) {
 }
 
 func (s *Solution) FindEmptyCols() {
-	g := transpose(s.G)
+	g := grids.Transpose(s.G)
 	var empty bool
 	for c, col := range g {
 		empty = true
@@ -56,16 +56,6 @@ func (s *Solution) CalcExpansion(p1, p2 grids.Position, factor int) int {
 		}
 	}
 	return exp
-}
-
-func transpose(m [][]byte) [][]byte {
-	t := make([][]byte, len(m))
-	for r := 0; r < len(m); r++ {
-		for c := 0; c < len(m[0]); c++ {
-			t[c] = append(t[c], m[r][c])
-		}
-	}
-	return t
 }
 
 func Abs(n int) int {
