@@ -37,6 +37,19 @@ func Transpose[T any](m [][]T) [][]T {
 	return t
 }
 
+// AoC uses a lot of ints.
+// Did not want to keep wrinting float64<>int conversions for math.Abs()
+func Abs(n int) int {
+	if n < 0 {
+		return -n
+	}
+	return n
+}
+
+func ManhattanDistance(p1, p2 Position) int {
+	return Abs(p1.Row-p2.Row) + Abs(p1.Col-p2.Col)
+}
+
 func NewGrid[T any](height int, width int, v T) *Grid[T] {
 	grid := &Grid[T]{Width: width, Height: height}
 	grid.items = make([][]T, height)

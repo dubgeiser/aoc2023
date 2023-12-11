@@ -58,17 +58,6 @@ func (s *Solution) CalcExpansion(p1, p2 grids.Position, factor int) int {
 	return exp
 }
 
-func Abs(n int) int {
-	if n < 0 {
-		return -n
-	}
-	return n
-}
-
-func ManhattanDistance(p1, p2 grids.Position) int {
-	return Abs(p1.Row-p2.Row) + Abs(p1.Col-p2.Col)
-}
-
 func (s *Solution) Solve(factor int) any {
 	answer := 0
 	count := 1
@@ -76,7 +65,7 @@ func (s *Solution) Solve(factor int) any {
 		for j := i + 1; j < len(s.Positions); j++ {
 			p1 := s.Positions[i]
 			p2 := s.Positions[j]
-			d := ManhattanDistance(p1, p2) + s.CalcExpansion(p1, p2, factor)
+			d := grids.ManhattanDistance(p1, p2) + s.CalcExpansion(p1, p2, factor)
 			count++
 			answer += d
 		}
