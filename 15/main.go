@@ -36,18 +36,12 @@ func (s *Solution) ProcessLine(i int, line string) {
 				boxes[bi] = append(boxes[bi], label)
 			}
 		} else {
-			removed := []string{}
-			for _, l := range boxes[bi] {
-				if l != label {
-					removed = append(removed, l)
-				}
-			}
-			boxes[bi] = removed
+			boxes[bi] = slices.DeleteFunc(boxes[bi], func(e string) bool { return e == label })
 		}
 	}
 	for bi, b := range boxes {
 		for li, label := range b {
-			s.answer2 += (bi+1) * (li+1) * label2f[label]
+			s.answer2 += (bi + 1) * (li + 1) * label2f[label]
 		}
 	}
 }
