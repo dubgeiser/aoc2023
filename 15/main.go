@@ -3,6 +3,9 @@ package main
 import (
 	"aoc2023/lib/file"
 	"fmt"
+	"regexp"
+	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -12,16 +15,47 @@ type Solution struct {
 }
 
 func (s *Solution) ProcessLine(i int, line string) {
-	sequence := strings.Split(line, ",")
-	for _, step := range sequence {
+	boxes := [256][]string{}
+	label2f := map[string]int{}
+	reOp := regexp.MustCompile(`-|=`)
+	for _, step := range strings.Split(line, ",") {
+		// Part 1
 		s.answer1 += Hash(step)
+
+		// Part 2
+		p := reOp.Split(step, -1)
+		label := p[0]
+		bi := Hash(label)
+		f := 1
+		if len(p) == 2 {
+			f, _ = strconv.Atoi(p[1])
+		}
+		label2f[label] = f
+		if strings.Contains(step, "=") {
+			if !slices.Contains(boxes[bi], label) {
+				boxes[bi] = append(boxes[bi], label)
+			}
+		} else {
+			removed := []string{}
+			for _, l := range boxes[bi] {
+				if l != label {
+					removed = append(removed, l)
+				}
+			}
+			boxes[bi] = removed
+		}
+	}
+	for bi, b := range boxes {
+		for li, label := range b {
+			s.answer2 += (bi+1) * (li+1) * label2f[label]
+		}
 	}
 }
 
 func Hash(s string) int {
 	hash := 0
 	for _, step := range []byte(s) {
-		hash +=int(step)
+		hash += int(step)
 		hash = (hash * 17) % 256
 	}
 	return hash
