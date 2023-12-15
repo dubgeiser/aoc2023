@@ -18,9 +18,9 @@ func (s *Solution) ProcessLine(i int, line string) {
 	}
 }
 
-func Hash(input string) int {
+func Hash(s string) int {
 	hash := 0
-	for _, step := range []byte(input) {
+	for _, step := range []byte(s) {
 		hash +=int(step)
 		hash = (hash * 17) % 256
 	}
