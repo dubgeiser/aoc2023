@@ -28,7 +28,7 @@ type Grid[T any] struct {
 
 // rows <-> cols
 func Transpose[T any](m [][]T) [][]T {
-	t := make([][]T, len(m))
+	t := make([][]T, len(m[0]))
 	for r := 0; r < len(m); r++ {
 		for c := 0; c < len(m[0]); c++ {
 			t[c] = append(t[c], m[r][c])
