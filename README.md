@@ -57,3 +57,16 @@ for _, sn := range sNrs {
     if n, err := strconv.Atoi(sn); err == nil {
         *targets[i] = append(*targets[i], n)
 ```
+
+## lib
+
+### grids
+Not easy-to-use just yet...
+`NewGrid()` constructor was naive and did not grow out of necessity.
+`GridFromFile()` is "better" but restricts to `string` type...
+`[][]byte` is probably better, maybe some generic T is possible
+
+It needs NESW (or U, D, L, R) `directions` next to `allDirections`
+
+`Abs()` probably needs to go in a different module (`ints`, `intmath`, or something along those lines.)
+
