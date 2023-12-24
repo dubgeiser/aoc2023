@@ -1,9 +1,13 @@
 package main
 
 import (
+	"aoc2023/lib/algo"
 	"aoc2023/lib/file"
 	"fmt"
+	"slices"
 	"strings"
+
+	"golang.org/x/exp/maps"
 )
 
 const (
@@ -117,7 +121,14 @@ func (s *Solution) initConjunctions() {
 	}
 }
 
-func (s *Solution) Solve1() int {
+func Solve1() int {
+	s := &Solution{modules: make(map[string]*Module)}
+	lineCount, err := file.ReadLines("./input", s)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println()
+	fmt.Println("Read", lineCount, "lines")
 	s.initConjunctions()
 	hi := 0
 	lo := 0
@@ -146,13 +157,52 @@ func (s *Solution) Solve1() int {
 	return hi * lo
 }
 
-func main() {
-	s := &Solution{modules: make(map[string]*Module)}
-	lineCount, err := file.ReadLines("./input", s)
-	if err != nil {
-		panic(err)
+func allPositive(namedCounts map[string]int) bool {
+	all := true
+	for _, n := range namedCounts {
+		all = all && (n > 0)
 	}
-	fmt.Println()
-	fmt.Println("Read", lineCount, "lines")
-	fmt.Println(s.Solve1())
+	return all
+}
+
+// Manually checking input file: Only 1 module sends to "rx", ie: "&mg"
+// mg will only send rx a low pulse if all of its senders have been high
+// 4 Modules send to mg: &jg, &rh, &jm, &hf
+// Feels like 08-2:
+// Determine when each of the 4 modules receives a hi pulse and lcm()?
+func Solve2() int {
+	s := &Solution{modules: make(map[string]*Module)}
+	file.ReadLines("./input", s)
+	s.initConjunctions()
+	q := []Pulse{}
+	var p Pulse
+	count := 0
+	hiCycles := map[string]int{"jg": 0, "rh": 0, "jm": 0, "hf": 0}
+	for {
+		count++
+		if allPositive(hiCycles) {
+			break
+		}
+		for _, name := range s.broadcasts {
+			q = append(q, newPulse("broadcaster", name, LO))
+		}
+		for len(q) > 0 {
+			p = q[0]
+			q = q[1:]
+			if slices.Contains(maps.Keys(hiCycles), p.sender) && p.receiver == "mg" && p.strength == HI {
+				hiCycles[p.sender] = count
+			}
+			if m, ok := s.modules[p.receiver]; ok {
+				for _, np := range m.ReceivePulse(p) {
+					q = append(q, np)
+				}
+			}
+		}
+	}
+	return algo.LCMSlice(maps.Values(hiCycles))
+}
+
+func main() {
+	fmt.Println(Solve1())
+	fmt.Println(Solve2())
 }
