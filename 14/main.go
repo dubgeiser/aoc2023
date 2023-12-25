@@ -29,7 +29,7 @@ func totalLoad(g [][]byte) int {
 }
 
 func (s *Solution) Solve1() int {
-	g := copyGrid(s.G)
+	g := slices.Clone(s.G)
 	tiltNorth(g)
 	return totalLoad(g)
 }
@@ -132,7 +132,7 @@ func asGrid(s string) [][]byte {
 // seen in a slice.  Once we detect a configuration we've already seen, we know
 // we're restarting the cycle. So the cycle starts after len(seen).
 func (s *Solution) Solve2() int {
-	g := copyGrid(s.G)
+	g := slices.Clone(s.G)
 	seen := []string{}
 	var sg string
 
@@ -168,18 +168,7 @@ func (s *Solution) Solve2() int {
 	// To get the load at x iterations ->
 	// (x - preRun) % cycleLength
 	// and then subtract 1 for the cycle that we already had in `seen`
-	return loads[(1_000_000_000 - preRunCount) % (len(loads)) - 1]
-}
-
-func copyGrid(src [][]byte) [][]byte {
-	g := make([][]byte, len(src))
-	for r, row := range src {
-		g[r] = make([]byte, len(src[0]))
-		for c, col := range row {
-			g[r][c] = col
-		}
-	}
-	return g
+	return loads[(1_000_000_000-preRunCount)%(len(loads))-1]
 }
 
 func print(g [][]byte) {
