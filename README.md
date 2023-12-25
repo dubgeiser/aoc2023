@@ -32,6 +32,11 @@ After all; card games have been programmed in home computers with 2KB memory and
 ### Day 9
 I assume there a bunch of (ML) algo's for predicting the next element in a sequence
 
+### Day 20
+Design-wise, I'm not too happy with the general Module struct.
+I'd much rather have FlipFlop and Conjuctions structs, that support the same interface Module.
+But at the time, it was too cumbersome to get the design clean enough... 
+Would be nice to revisit it and clean it up.
 
 ## Notes
 
