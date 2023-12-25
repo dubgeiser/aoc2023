@@ -32,6 +32,10 @@ After all; card games have been programmed in home computers with 2KB memory and
 ### Day 9
 I assume there a bunch of (ML) algo's for predicting the next element in a sequence
 
+### Day 13
+Bit ugly with the separate `CheckGrid()` call.
+Part 2 took a while, because of reference to the slices in `isPerfectReflection()` and the `calcLines()` calculation was not sufficient to count the 1-off mirroring correctly, so I rewrote it from scratch...
+
 ### Day 20
 Design-wise, I'm not too happy with the general Module struct.
 I'd much rather have FlipFlop and Conjuctions structs, that support the same interface Module.

@@ -31,11 +31,13 @@ func (s *Solution) ProcessLine(i int, line string) {
 func (s *Solution) CheckGrid() {
 	s.answer1 += calcLines(s.G) * 100
 	s.answer1 += calcLines(grids.Transpose[byte](s.G))
+	s.answer2 += calcAlmostPerfectReflection(s.G, 100)
+	s.answer2 += calcAlmostPerfectReflection(grids.Transpose(s.G), 1)
 }
 
-func isPerfectReflection(g [][]byte, r1, r2 int) bool {
-	top := g[:r2]
-	bot := g[r2:]
+func isPerfectReflection(g [][]byte, r int) bool {
+	top := slices.Clone(g[:r])
+	bot := slices.Clone(g[r:])
 	var g1, g2 [][]byte = top, bot
 	if len(top) > len(bot) {
 		g1, g2 = bot, top
@@ -52,9 +54,32 @@ func isPerfectReflection(g [][]byte, r1, r2 int) bool {
 	return true
 }
 
+func calcAlmostPerfectReflection(g [][]byte, factor int) int {
+	var diffCount int
+	count := 0
+	for i := 0; i < len(g)-1; i++ {
+		diffCount = 0
+		for j := 0; j < len(g); j++ {
+			above := i - j
+			below := i + 1 + j
+			if above < below && above >= 0 && below < len(g) {
+				for c := 0; c < len(g[0]); c++ {
+					if g[above][c] != g[below][c] {
+						diffCount++
+					}
+				}
+			}
+		}
+		if diffCount == 1 {
+			count += (i + 1) * factor
+		}
+	}
+	return count
+}
+
 func calcLines(g [][]byte) int {
 	for r := 0; r < len(g)-1; r++ {
-		if string(g[r]) == string(g[r+1]) && isPerfectReflection(g, r, r+1) {
+		if string(g[r]) == string(g[r+1]) && isPerfectReflection(g, r+1) {
 			return r + 1
 		}
 	}
