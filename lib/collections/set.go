@@ -36,7 +36,7 @@ func (s *Set[T]) Remove(v T) {
 	delete(s.items, v)
 }
 
-func (s *Set[T]) Size() int {
+func (s *Set[T]) Len() int {
 	return len(s.items)
 }
 

@@ -113,7 +113,7 @@ func (s *Solution) Solve1() int {
 		}
 	}
 	s.Loop = loop
-	if s.possibleStarts.Size() > 1 {
+	if s.possibleStarts.Len() > 1 {
 		panic(s.possibleStarts)
 	}
 	s.M[s.start.Row][s.start.Col] = s.possibleStarts.Export()[0]

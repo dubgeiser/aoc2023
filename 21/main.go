@@ -72,7 +72,7 @@ func (s *Solution) solve1() int {
 		}
 	}
 
-	return answer.Size()
+	return answer.Len()
 }
 
 func main() {
