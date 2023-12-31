@@ -125,6 +125,61 @@ func (s *Solution) solve1() int {
 	return 0
 }
 
+func (g Grid) adjacents10(cb *CityBlock) []*CityBlock {
+	adj := []*CityBlock{}
+	for _, dir := range [4][2]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}} {
+		rr, cc := cb.row+dir[0], cb.col+dir[1]
+		if rr < 0 || cc < 0 || rr >= len(g) || cc >= len(g[0]) {
+			continue
+		}
+		if cb.dirRow == -dir[0] && cb.dirCol == -dir[1] {
+			continue
+		}
+		dirCount := 1
+		if cb.dirRow == dir[0] && cb.dirCol == dir[1] {
+			dirCount = cb.dirCount + 1
+		} else {
+			if cb.dirCount < 4 && !(cb.col == 0 && cb.row == 0) {
+				continue
+			}
+		}
+		if dirCount > 10 {
+			continue
+		}
+		adj = append(adj, &CityBlock{
+			row:      rr,
+			col:      cc,
+			dirCount: dirCount,
+			heatLoss: cb.heatLoss + g[rr][cc],
+			dirRow:   dir[0],
+			dirCol:   dir[1],
+		})
+	}
+	return adj
+}
+
+func (s *Solution) solve2() int {
+	visited := collections.NewSet[string]()
+	pq := &PriorityQueue{}
+	heap.Init(pq)
+	heap.Push(pq, &CityBlock{row: 0, col: 0, heatLoss: 0, dirRow: 0, dirCol: 0, dirCount: 0})
+	for pq.Len() > 0 {
+		curr := heap.Pop(pq).(*CityBlock)
+		if curr.row == len(s.G)-1 && curr.col == len(s.G[0])-1 &&
+			curr.dirCount >= 4 {
+			return curr.heatLoss
+		}
+		if visited.Has(curr.String()) {
+			continue
+		}
+		for _, adj := range s.G.adjacents10(curr) {
+			heap.Push(pq, adj)
+		}
+		visited.Add(curr.String())
+	}
+	return 0
+}
+
 func main() {
 	s := &Solution{}
 	lineCount, err := file.ReadLines("./input", s)
@@ -133,4 +188,5 @@ func main() {
 	}
 	fmt.Println("Read", lineCount, "lines")
 	fmt.Println(s.solve1())
+	fmt.Println(s.solve2())
 }

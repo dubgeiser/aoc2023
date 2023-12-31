@@ -36,6 +36,11 @@ I assume there a bunch of (ML) algo's for predicting the next element in a seque
 Bit ugly with the separate `CheckGrid()` call.
 Part 2 took a while, because of reference to the slices in `isPerfectReflection()` and the `calcLines()` calculation was not sufficient to count the 1-off mirroring correctly, so I rewrote it from scratch...
 
+### Day 17
+Some refactoring can be done to remove the enormous code duplication between both parts.
+part 1's 3 and part 2's 4 and 10 can probably be extracted in some min/max arguments.
+Or the conditions (the RELAX() from Algo book on Dijkstra) can be passed as functors.
+
 ### Day 20
 Design-wise, I'm not too happy with the general Module struct.
 I'd much rather have FlipFlop and Conjuctions structs, that support the same interface Module.
