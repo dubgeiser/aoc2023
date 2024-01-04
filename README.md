@@ -32,6 +32,11 @@ After all; card games have been programmed in home computers with 2KB memory and
 ### Day 9
 I assume there a bunch of (ML) algo's for predicting the next element in a sequence
 
+### Day 12
+Wanted to brute force part 1 by "just trying all possible combinations"... which lead me to a serious running-around-in-circles-brainf*ck that I eventually broke through by introducing a multiple-base-number `decrement()` func.
+Runs slow af though, takes around 5 seconds :-D
+But lead to building a `Permutations()` func that I'll probably can refactor in a more re-usable lib func.
+
 ### Day 13
 Bit ugly with the separate `CheckGrid()` call.
 Part 2 took a while, because of reference to the slices in `isPerfectReflection()` and the `calcLines()` calculation was not sufficient to count the 1-off mirroring correctly, so I rewrote it from scratch...
