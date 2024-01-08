@@ -13,83 +13,98 @@ type Point struct {
 	y int
 }
 
-func move(p Point, dir string, steps int) []Point {
-	d := map[string]Point{
-		"U": {0, -1},
-		"D": {0, 1},
-		"L": {-1, 0},
-		"R": {1, 0},
-	}
-	path := []Point{}
-	for i := 1; i <= steps; i++ {
-		path = append(path, Point{p.x + i*d[dir].x, p.y + i*d[dir].y})
-	}
-	return path
+var D map[string]Point = map[string]Point{
+	"U": {0, -1},
+	"D": {0, 1},
+	"L": {-1, 0},
+	"R": {1, 0},
 }
 
 type Solution struct {
-	current    Point
-	currentDir string
-	path       []Point
-	corners    []Point
-}
-
-func isTurning(dir1, dir2 string) bool {
-	return dir1 != dir2
+	isPart2 bool
+	path    []Point
+	corners []Point
+	lenPath int
 }
 
 func (s *Solution) ProcessLine(i int, line string) {
-	parts := strings.Split(line, " ")
-	dir := parts[0]
-	steps, _ := strconv.Atoi(parts[1])
-	// Part 1 doesn't need color.
-	// color := strings.Replace(strings.Replace(parts[2], "(#", "", 1), ")", "", 1)
-	s.path = append(s.path, move(s.current, dir, steps)...)
-
-	// The start is always a corner
-	// If not in start we should change direction in order to count a corner.
-	if i == 0 || isTurning(s.currentDir, dir) {
-		s.corners = append(s.corners, s.current)
+	if i == 0 {
+		s.corners = []Point{{0, 0}}
 	}
-	s.current = s.path[len(s.path)-1]
-	s.currentDir = dir
+	parts := strings.Split(line, " ")
+	dir := D[parts[0]]
+	steps, _ := strconv.Atoi(parts[1])
+	color := strings.Replace(strings.Replace(parts[2], "(#", "", 1), ")", "", 1)
+	if s.isPart2 {
+		ss, _ := strconv.ParseInt(color[:len(color)-1], 16, 64)
+		steps = int(ss)
+		dir = D[map[byte]string{
+			'0': "R",
+			'1': "D",
+			'2': "L",
+			'3': "U",
+		}[color[len(color)-1]]]
+	}
+	s.lenPath += steps
+	p := s.corners[i]
+	s.corners = append(s.corners, Point{p.x + steps*dir.x, p.y + steps*dir.y})
+}
+
+// Shoelace via formula:
+// https://en.wikipedia.org/wiki/Shoelace_formula#Other_formulas
+// The one in solve1() had the wrong answer for part2-input (1 short!)
+func (s *Solution) solve2() int {
+	area := 0
+	var p, pp, pn Point
+	for i := 0; i < len(s.corners); i++ {
+		p = s.corners[i]
+		if i == 0 {
+			pp = s.corners[len(s.corners)-1]
+		} else {
+			pp = s.corners[i-1]
+		}
+		if i == len(s.corners)-1 {
+			pn = s.corners[0]
+		} else {
+			pn = s.corners[i+1]
+		}
+		area += p.x * (pp.y - pn.y)
+	}
+	area = int(0.5*math.Abs(float64(area)))
+	// Make sure we have the _complete_ inner area, see "Pick's theorem"
+	pick := area - s.lenPath/2 + 1
+	// and add the path around it.
+	return pick + s.lenPath
 }
 
 // "Area of a polygon from coordinates"
 // https://www.themathdoctors.org/polygon-coordinates-and-areas/
-// Shoelace Formula
+// Shoelace Formula + Pick's theorem
 func (s *Solution) solve1() int {
-	area, s1, s2 := 0, 0, 0
-	// "Note that this is the first row, repeated."
-	// Don't mutate the original corners, we still need to solve part 2.
+	s1, s2 := 0, 0
 	corners := append(s.corners, s.corners[0])
-	path := append(s.path, s.path[0])
 	for i := 0; i < len(corners)-1; i++ {
-		// "You have to multiply each number of the first column with the number
-		// in the second column of the next row.  Sum the products -> s1."
 		s1 += corners[i].x * corners[i+1].y
-		// "Then multiply each number of the second column with the number in
-		// the first column of the next row. Sum the products -> s2."
 		s2 += corners[i].y * corners[i+1].x
 	}
-	// Shoelace
-	area = int(0.5 * math.Abs(float64(s1)-float64(s2)))
-	// Need to add the path to the area
-	// But we need to take the corners into account.
-	// I don't know the exact relation: but it seems that len(path)/2 would be
-	// in the right direction. (we're dealing with squares, but only half of 'm
-	// will be used for the area).
-	// I just added the one, I figure it "closes" the loop. :shrug:
-	area += len(path)/2 + 1
-	return area
+	// sample:   952408144115 (ok)
+	// input: 122103860427464 (too low)
+	// Unfortunately; this came 1 short in part2, which, in the end made me
+	// code the shoelace via https://en.wikipedia.org/wiki/Shoelace_formula#Other_formulas
+	return int(0.5*math.Abs(float64(s1)-float64(s2))) + s.lenPath/2 + 1
 }
 
 func main() {
-	s := &Solution{current: Point{0, 0}}
+	s := &Solution{}
 	lineCount, err := file.ReadLines("./input", s)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Read", lineCount, "lines")
-	fmt.Println(s.solve1())
+	fmt.Println(s.solve2())
+
+	s2 := &Solution{}
+	s2.isPart2 = true
+	file.ReadLines("./input", s2)
+	fmt.Println(s2.solve2())
 }
