@@ -7,7 +7,7 @@ import (
 )
 
 type Solution struct {
-	G         [][]byte
+	G         grids.ByteGrid
 	ExpRows   []int
 	ExpCols   []int
 	Positions []grids.Position

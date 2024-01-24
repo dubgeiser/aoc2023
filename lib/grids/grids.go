@@ -5,6 +5,22 @@ import (
 	"strings"
 )
 
+type ByteGrid [][]byte
+
+type byteGridBuilder struct {
+	g ByteGrid
+}
+
+func (b *byteGridBuilder) ProcessLine(i int, line string) {
+	b.g = append(b.g, []byte(line))
+}
+
+func ByteGridFromFile(fn string) ByteGrid {
+	b := &byteGridBuilder{}
+	file.ReadLines(fn, b)
+	return b.g
+}
+
 var allDirections = [8]Position{
 	{0, -1}, {0, 1},
 	{1, 0}, {1, -1}, {1, 1},

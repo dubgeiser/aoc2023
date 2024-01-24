@@ -83,7 +83,7 @@ for _, sn := range sNrs {
 Not easy-to-use just yet...
 `NewGrid()` constructor was naive and did not grow out of necessity.
 `GridFromFile()` is "better" but restricts to `string` type...
-`[][]byte` is probably better, maybe some generic T is possible
+`[][]byte` or `grids.ByteGrid` is probably better, maybe some generic T is possible
 
 It needs NESW (or U, D, L, R) `directions` next to `allDirections`
 

@@ -1,21 +1,17 @@
 package main
 
 import (
-	"aoc2023/lib/file"
+	"aoc2023/lib/grids"
 	"fmt"
 	"slices"
 	"strings"
 )
 
 type Solution struct {
-	G [][]byte
+	G grids.ByteGrid
 }
 
-func (s *Solution) ProcessLine(i int, line string) {
-	s.G = append(s.G, []byte(line))
-}
-
-func totalLoad(g [][]byte) int {
+func totalLoad(g grids.ByteGrid) int {
 	answer := 0
 	L := len(g)
 	for r, row := range g {
@@ -34,7 +30,7 @@ func (s *Solution) Solve1() int {
 	return totalLoad(g)
 }
 
-func tiltNorth(g [][]byte) {
+func tiltNorth(g grids.ByteGrid) {
 	for r := 1; r < len(g); r++ {
 		for c, col := range g[r] {
 			if col != 'O' {
@@ -48,7 +44,7 @@ func tiltNorth(g [][]byte) {
 	}
 }
 
-func tiltSouth(g [][]byte) {
+func tiltSouth(g grids.ByteGrid) {
 	for r := len(g) - 1; r >= 0; r-- {
 		for c, col := range g[r] {
 			if col != 'O' {
@@ -62,7 +58,7 @@ func tiltSouth(g [][]byte) {
 	}
 }
 
-func tiltWest(g [][]byte) {
+func tiltWest(g grids.ByteGrid) {
 	for c := 1; c < len(g[0]); c++ {
 		for r := range g {
 			if g[r][c] != 'O' {
@@ -76,7 +72,7 @@ func tiltWest(g [][]byte) {
 	}
 }
 
-func tiltEast(g [][]byte) {
+func tiltEast(g grids.ByteGrid) {
 	for c := len(g[0]) - 1; c >= 0; c-- {
 		for r := range g {
 			if g[r][c] != 'O' {
@@ -90,14 +86,14 @@ func tiltEast(g [][]byte) {
 	}
 }
 
-func cycle(g [][]byte) {
+func cycle(g grids.ByteGrid) {
 	tiltNorth(g)
 	tiltWest(g)
 	tiltSouth(g)
 	tiltEast(g)
 }
 
-func asString(g [][]byte) string {
+func asString(g grids.ByteGrid) string {
 	s := ""
 	for _, row := range g {
 		s += fmt.Sprintf("%s\n", string(row))
@@ -106,10 +102,10 @@ func asString(g [][]byte) string {
 	return s
 }
 
-func asGrid(s string) [][]byte {
-	var g [][]byte
+func asGrid(s string) grids.ByteGrid {
+	var g grids.ByteGrid
 	lines := strings.Split(s, "\n")
-	g = make([][]byte, len(lines))
+	g = make(grids.ByteGrid, len(lines))
 	for r, l := range lines {
 		g[r] = []byte(l)
 	}
@@ -171,7 +167,7 @@ func (s *Solution) Solve2() int {
 	return loads[(1_000_000_000-preRunCount)%(len(loads))-1]
 }
 
-func print(g [][]byte) {
+func print(g grids.ByteGrid) {
 	for _, row := range g {
 		fmt.Println(string(row))
 	}
@@ -179,12 +175,8 @@ func print(g [][]byte) {
 }
 
 func main() {
-	s := &Solution{}
-	lineCount, err := file.ReadLines("./input", s)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Read", lineCount, "lines")
+	s := &Solution{G: grids.ByteGridFromFile("./input")}
+	fmt.Println()
 	fmt.Println(s.Solve1())
 	fmt.Println(s.Solve2())
 }

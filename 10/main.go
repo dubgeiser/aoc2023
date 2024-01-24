@@ -2,7 +2,6 @@ package main
 
 import (
 	"aoc2023/lib/collections"
-	"aoc2023/lib/file"
 	"aoc2023/lib/grids"
 	"fmt"
 	"slices"
@@ -37,20 +36,11 @@ func (s *Solution) IsConnectedTo(ch1, ch2 byte, dir int) bool {
 }
 
 type Solution struct {
-	M              [][]byte
+	M              grids.ByteGrid
 	start          grids.Position
 	Loop           []grids.Position
 	possibleStarts *collections.Set[byte]
 	chStart        byte
-}
-
-func (s *Solution) ProcessLine(i int, line string) {
-	row := []byte(line)
-	s.M = append(s.M, row)
-	j := slices.Index(row, 'S')
-	if j >= 0 {
-		s.start = grids.NewPosition(i, j)
-	}
 }
 
 func (s *Solution) AdjacentPositions(p grids.Position) []grids.Position {
@@ -80,7 +70,7 @@ func (s *Solution) AdjacentPositions(p grids.Position) []grids.Position {
 func (s *Solution) CountEdgeCrossings(p grids.Position) int {
 	var borderChars = []byte{'|', 'L', 'J'}
 	count := 0
-	for c:= p.Col + 1; c <  len(s.M[p.Row]); c++ {
+	for c := p.Col + 1; c < len(s.M[p.Row]); c++ {
 		ch := s.M[p.Row][c]
 		if slices.Contains(borderChars, ch) {
 			count++
@@ -146,12 +136,16 @@ func (s *Solution) Solve2() int {
 }
 
 func main() {
-	s := &Solution{possibleStarts: collections.NewSetFrom([]byte{'|', '-', 'L', 'J', '7', 'F'})}
-	lineCount, err := file.ReadLines("./input", s)
-	if err != nil {
-		panic(err)
+	s := &Solution{
+		possibleStarts: collections.NewSetFrom([]byte{'|', '-', 'L', 'J', '7', 'F'}),
+		M:              grids.ByteGridFromFile("./input"),
 	}
-	fmt.Println("Read", lineCount, "lines")
+	for i, row := range s.M {
+		j := slices.Index(row, 'S')
+		if j >= 0 {
+			s.start = grids.NewPosition(i, j)
+		}
+	}
 	fmt.Println(s.Solve1())
 	fmt.Println(s.Solve2())
 }

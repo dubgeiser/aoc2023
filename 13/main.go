@@ -7,14 +7,14 @@ import (
 	"slices"
 )
 
-func printGrid(g [][]byte) {
+func printGrid(g grids.ByteGrid) {
 	for _, row := range g {
 		fmt.Println(string(row))
 	}
 }
 
 type Solution struct {
-	G       [][]byte
+	G       grids.ByteGrid
 	answer1 int
 	answer2 int
 }
@@ -22,7 +22,7 @@ type Solution struct {
 func (s *Solution) ProcessLine(i int, line string) {
 	if line == "" {
 		s.CheckGrid()
-		s.G = [][]byte{}
+		s.G = grids.ByteGrid{}
 		return
 	}
 	s.G = append(s.G, []byte(line))
@@ -35,10 +35,10 @@ func (s *Solution) CheckGrid() {
 	s.answer2 += calcAlmostPerfectReflection(grids.Transpose(s.G), 1)
 }
 
-func isPerfectReflection(g [][]byte, r int) bool {
+func isPerfectReflection(g grids.ByteGrid, r int) bool {
 	top := slices.Clone(g[:r])
 	bot := slices.Clone(g[r:])
-	var g1, g2 [][]byte = top, bot
+	var g1, g2 grids.ByteGrid = top, bot
 	if len(top) > len(bot) {
 		g1, g2 = bot, top
 		slices.Reverse(g1)
@@ -54,7 +54,7 @@ func isPerfectReflection(g [][]byte, r int) bool {
 	return true
 }
 
-func calcAlmostPerfectReflection(g [][]byte, factor int) int {
+func calcAlmostPerfectReflection(g grids.ByteGrid, factor int) int {
 	var diffCount int
 	count := 0
 	for i := 0; i < len(g)-1; i++ {
@@ -77,7 +77,7 @@ func calcAlmostPerfectReflection(g [][]byte, factor int) int {
 	return count
 }
 
-func calcLines(g [][]byte) int {
+func calcLines(g grids.ByteGrid) int {
 	for r := 0; r < len(g)-1; r++ {
 		if string(g[r]) == string(g[r+1]) && isPerfectReflection(g, r+1) {
 			return r + 1
